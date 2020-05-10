@@ -66,7 +66,28 @@ namespace PWABlog
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                    );
+
+                endpoints.MapControllerRoute(
+                    name: "adm.categorias",
+                    pattern: "{controller=AdmCategorias}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "adm.etiquetas",
+                    pattern: "{controller=AdmEtiqueta}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "adm.autor",
+                    pattern: "{controller=AdmAutorController}/{action=Index}/{id?}"
+                );
+
+                endpoints.MapControllerRoute(
+                    name: "adm.postagem",
+                    pattern: "{controller=AdmPostagemController}/{action=Index}/{id?}"
+                );
             });
         }
     }

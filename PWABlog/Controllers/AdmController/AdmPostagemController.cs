@@ -6,12 +6,12 @@ using System;
 
 namespace Blog.ViewMoldels
 {
-    public class AdminPostagemController : Controller
+    public class AdmPostagemController : Controller
     {
         private readonly Database context;
         private readonly PostagemOrmService postagemOrmService;
 
-        public AdminPostagemController(Database context, PostagemOrmService PostagemOrmService)
+        public AdmPostagemController(Database context, PostagemOrmService PostagemOrmService)
         {
             this.context = context;
             postagemOrmService = PostagemOrmService;
