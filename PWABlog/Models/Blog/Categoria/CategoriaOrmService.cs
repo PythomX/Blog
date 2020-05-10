@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +8,11 @@ namespace PWABlog.Models.Blog.Categoria
 {
     public class CategoriaOrmService
     {
-        private readonly Database _databaseContext;
+        private readonly Database databaseContext;
 
         public CategoriaOrmService(Database databaseContext)
         {
-            _databaseContext = databaseContext;
+            this.databaseContext = databaseContext;
         }
 
         public List<CategoriaEntity> ObterCategorias()
@@ -23,19 +24,19 @@ namespace PWABlog.Models.Blog.Categoria
             /**********************************************************************************************************/
             
             // First = Obter a primeira categoria retornada pela consulta
-            var primeiraCategoria = _databaseContext.Categorias.First();
+            var primeiraCategoria = databaseContext.Categorias.First();
             
             // FirstOrDefault = Mesmo do First, porém retorna nulo caso não encontre nenhuma
-            var primeiraCategoriaOuNulo = _databaseContext.Categorias.FirstOrDefault();
+            var primeiraCategoriaOuNulo = databaseContext.Categorias.FirstOrDefault();
             
             // Single = Obter um único registro do banco de dados
-            var algumaCategoriaEspecifica = _databaseContext.Categorias.Single(c => c.Id == 3);
+            var algumaCategoriaEspecifica = databaseContext.Categorias.Single(c => c.Id == 3);
             
             // SingleOrDefault = Mesmo do Sigle, porém retorna nulo caso não encontre nenhuma
-            var algumaCategoriaOuNulo = _databaseContext.Categorias.SingleOrDefault(c => c.Id == 3);
+            var algumaCategoriaOuNulo = databaseContext.Categorias.SingleOrDefault(c => c.Id == 3);
             
             // Find = Equivalente ao SingleOrDefault, porém fazendo uma busca por uma propriedade chave
-            var encontrarCategoria = _databaseContext.Categorias.Find(3);
+            var encontrarCategoria = databaseContext.Categorias.Find(3);
             
             
             /**********************************************************************************************************/
@@ -43,15 +44,15 @@ namespace PWABlog.Models.Blog.Categoria
             /**********************************************************************************************************/
      
             // ToList
-            var todasCategorias = _databaseContext.Categorias.ToList();
+            var todasCategorias = databaseContext.Categorias.ToList();
             
             
             /***********/
             /* FILTROS */
             /***********/
 
-            var categoriasComALetraG = _databaseContext.Categorias.Where(c => c.Nome.StartsWith("G")).ToList();
-            var categoriasComALetraMouL = _databaseContext.Categorias
+            var categoriasComALetraG = databaseContext.Categorias.Where(c => c.Nome.StartsWith("G")).ToList();
+            var categoriasComALetraMouL = databaseContext.Categorias
                 .Where(c => c.Nome.StartsWith("M") || c.Nome.StartsWith("L"))
                 .ToList();
             
@@ -61,23 +62,23 @@ namespace PWABlog.Models.Blog.Categoria
             /* ORDENAÇÃO */
             /*************/
 
-            var categoriasEmOrdemAlfabetica = _databaseContext.Categorias.OrderBy(c => c.Nome).ToList();
-            var categoriasEmOrdemAlfabeticaInversa = _databaseContext.Categorias.OrderByDescending(c => c.Nome).ToList();
+            var categoriasEmOrdemAlfabetica = databaseContext.Categorias.OrderBy(c => c.Nome).ToList();
+            var categoriasEmOrdemAlfabeticaInversa = databaseContext.Categorias.OrderByDescending(c => c.Nome).ToList();
             
             
             /**************************/
             /* ENTIDADES RELACIONADAS */
             /**************************/
 
-            var categoriasESuasEtiquetas = _databaseContext.Categorias
+            var categoriasESuasEtiquetas = databaseContext.Categorias
                 .Include(c => c.Etiquetas)
                 .ToList();
                 
-            var categoriasSemEtiquetas = _databaseContext.Categorias
+            var categoriasSemEtiquetas = databaseContext.Categorias
                 .Where(c=> c.Etiquetas.Count == 0)
                 .ToList();
             
-            var categoriasComEtiquetas = _databaseContext.Categorias
+            var categoriasComEtiquetas = databaseContext.Categorias
                 .Where(c=> c.Etiquetas.Count > 0)
                 .ToList();
             
@@ -86,22 +87,63 @@ namespace PWABlog.Models.Blog.Categoria
             
             
             // Código de fato necessário para o método
-            return _databaseContext.Categorias
+            return databaseContext.Categorias
                 .Include(c => c.Etiquetas)
                 .ToList();
         }
 
-        public CategoriaEntity ObterCategoriaPorId(int idCategoria)
+        public CategoriaEntity getById(int idCategoria)
         {
-            var categoria = _databaseContext.Categorias.Find(idCategoria);
+            var categoria = databaseContext.Categorias.Find(idCategoria);
 
             return categoria;
         }
 
-        public List<CategoriaEntity> PesquisarCategoriasPorNome(string nomeCategoria)
+        public List<CategoriaEntity> getByName(string nomeCategoria)
         {
-            return _databaseContext.Categorias.Where(c => c.Nome.Contains(nomeCategoria)).ToList();
+            return databaseContext.Categorias.Where(c => c.Nome.Contains(nomeCategoria)).ToList();
             
         }
+
+
+        public CategoriaEntity Create(string nome)
+        {
+            var novaCategoria = new CategoriaEntity { Nome = nome };
+            databaseContext.Categorias.Add(novaCategoria);
+            databaseContext.SaveChanges();
+
+            return novaCategoria;
+        }
+
+        public CategoriaEntity Edit(int id, string nome)
+        {
+            var categoria = databaseContext.Categorias.Find(id);
+
+            if (categoria == null)
+            {
+                throw new Exception("Categoria não encontrada!");
+            }
+
+            categoria.Nome = nome;
+            databaseContext.SaveChanges();
+
+            return categoria;
+        }
+
+        public bool Delete(int id)
+        {
+            var categoria = databaseContext.Categorias.Find(id);
+
+            if (categoria == null)
+            {
+                throw new Exception("Categoria não encontrada!");
+            }
+
+            databaseContext.Categorias.Remove(categoria);
+            databaseContext.SaveChanges();
+
+            return true;
+        }
+
     }
 }
