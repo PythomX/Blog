@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Models.Blog.Autor;
+using Blog.Models.Blog.Etiqueta;
+using Blog.Models.ControleAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,18 +28,30 @@ namespace PWABlog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            using(var databaseContext = new Database())
+            services.AddControllersWithViews();
+
+            using (var database = new Database())
             {
-                databaseContext.Database.EnsureCreated();
+                database.Database.EnsureDeleted();
+
+                database.Database.EnsureCreated();
             }
-            
+
+            //Email único, e a senha é necessária ter 8 digitos!
+            services.AddIdentity<Usuario, Papel>(options => {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 8;
+            }).AddEntityFrameworkStores<Database>();
+
             // Adicionar o serviço do banco de dados
             services.AddDbContext<Database>();
             
             // Adicionar os serviços de ORM das entidades do domínio
             services.AddTransient<CategoriaOrmService>();
             services.AddTransient<PostagemOrmService>();
-            
+            services.AddTransient<AutorOrmService>();
+            services.AddTransient<EtiquetaOrmService>();
+
             // Adicionar os serviços que possibilitam o funcionamento dos controllers e das views
             services.AddControllersWithViews();
         }
