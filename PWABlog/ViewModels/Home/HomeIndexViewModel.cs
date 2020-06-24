@@ -29,12 +29,13 @@ namespace PWABlog.ViewModels.Home
 
     public class PostagemHomeIndex
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Titulo { get; set; }
+        public string NumeroComentarios { get; set; }
         public string Texto { get; set; }
-        public AutorEntity Autor { get; set; }
-        public string UrlCapa { get; set; }
+        public string Categoria { get; set; }
         public DateTime UltimaAtualizacao { get; set; }
+        public string DataCriacao { get; set; }
 
     public class CategoriaHomeIndex
     {
@@ -50,9 +51,9 @@ namespace PWABlog.ViewModels.Home
     
     public class PostagemPopularHomeIndex
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Titulo { get; set; }
-        public AutorEntity Autor { get; set; }
+        public string Categoria { get; set; }
     }
 
         //Retornar a hora já no formato desejado!

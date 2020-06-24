@@ -14,18 +14,18 @@ namespace PWABlog.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly CategoriaOrmService _categoriaOrmService;
-        private readonly PostagemOrmService _postagemOrmService;
+        private readonly ILogger<HomeController> logger;
+        private readonly CategoriaOrmService categoriaOrmService;
+        private readonly PostagemOrmService postagemOrmService;
 
         public HomeController(
             ILogger<HomeController> logger,
             CategoriaOrmService categoriaOrmService,
             PostagemOrmService postagemOrmService
         ){
-            _logger = logger;
-            _categoriaOrmService = categoriaOrmService;
-            _postagemOrmService = postagemOrmService;
+            this.logger = logger;
+            this.categoriaOrmService = categoriaOrmService;
+            this.postagemOrmService = postagemOrmService;
         }
 
         public IActionResult Privacy()
@@ -36,35 +36,34 @@ namespace PWABlog.Controllers
         public IActionResult Index()
         {
             HomeIndexViewModel model = new HomeIndexViewModel();
-            foreach (var post in _postagemOrmService.GetAll())
-            {
-                var postagem = new PostagemHomeIndex();
-                postagem.Titulo = post.Titulo;
-                postagem.UrlCapa = post.UrlCapa;
+            List<PostagemEntity> listaPostagens = postagemOrmService.GetAll();
+            foreach (PostagemEntity postagem in listaPostagens) {
+                PostagemHomeIndex postagemHomeIndex = new PostagemHomeIndex();
+                postagemHomeIndex.Titulo = postagem.Titulo;
+                postagemHomeIndex.Texto = postagem.Descricao;
+                postagemHomeIndex.Categoria = postagem.Categoria.Nome;
+                postagemHomeIndex.NumeroComentarios = postagem.Comentarios.Count.ToString();
+                postagemHomeIndex.Id = postagem.Id.ToString();
 
-                var revisao = post.Revisoes.FirstOrDefault();
-                if (revisao != null)
-                {
-                    postagem.Id = revisao.Id;
-                    postagem.Texto = revisao.Texto;
-                    postagem.UltimaAtualizacao = revisao.Data;
-                    postagem.Autor = post.Autor;
-                    model.Postagens.Add(postagem);
+                // Obter última revisão
+                RevisaoEntity ultimaRevisao = postagem.Revisoes.OrderByDescending(o => o.DataCriacao).FirstOrDefault();
+                if (ultimaRevisao != null) {
+                    postagemHomeIndex.DataCriacao = ultimaRevisao.DataCriacao.ToLongDateString();
                 }
+
+                model.Postagens.Add(postagemHomeIndex);
             }
-
-            foreach (var post in _postagemOrmService.GetMostPopular())
-            {
-                var postagem = new PostagemMostPopularHomeIndex();
-                postagem.Titulo = post.Titulo;
-                postagem.Autor = post.Autor;
-
-                model.PopularPosts.Add(postagem);
-            }
-
 
             // Alimentar a lista de postagens populares que serão exibidas na view
-            // TODO Obter lista de postagens populares
+            List<PostagemEntity> postagensPopulares = postagemOrmService.GetPostsPopular();
+            foreach (PostagemEntity postagemPopular in postagensPopulares) {
+                model.PostagensPopulares.Add(new PostagemHomeIndex.PostagemPopularHomeIndex()
+                {
+                    Categoria = postagemPopular.Categoria.Nome,
+                    Id = postagemPopular.Id.ToString(),
+                    Titulo = postagemPopular.Titulo
+                });
+            }
 
 
             return View(model);

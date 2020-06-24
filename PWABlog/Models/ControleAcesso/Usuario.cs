@@ -9,5 +9,7 @@ namespace Blog.Models.ControleAcesso
     public class Usuario : IdentityUser
     {
         
+        public string Apelido { get; set; }
+        
     }
 }

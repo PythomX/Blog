@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace PWABlog.Models.Blog.Postagem
             this.databaseContext = databaseContext;
         }
 
-        public List<PostagemEntity> getAll()
+        public List<PostagemEntity> GetAll()
         {
             return databaseContext.Postagens
                 .Include(p => p.Categoria)
@@ -30,7 +31,7 @@ namespace PWABlog.Models.Blog.Postagem
                 .ToList();
         }
 
-        public List<PostagemEntity> getPostsPopular()
+        public List<PostagemEntity> GetPostsPopular()
         {
             return databaseContext.Postagens
                 .Include(a => a.Autor)
@@ -39,7 +40,7 @@ namespace PWABlog.Models.Blog.Postagem
                 .ToList();
         }
 
-        public int getLastVersion(int postagemId)
+        public int GetLastVersion(int postagemId)
         {
             var revisao = this.databaseContext.Postagens
               .Include(r => r.Revisoes)
@@ -108,7 +109,7 @@ namespace PWABlog.Models.Blog.Postagem
             {
                 Texto = texto,
                 DataCriacao = DateTime.Now,
-                Versao = this.getLastVersion(id) + 1,
+                Versao = this.GetLastVersion(id) + 1,
             };
 
             postagem.Revisoes.Add(revisao);

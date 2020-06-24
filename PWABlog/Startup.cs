@@ -43,6 +43,12 @@ namespace PWABlog
                 options.Password.RequiredLength = 8;
             }).AddEntityFrameworkStores<Database>();
 
+            //Configurar o mecanismo de controle de acesso
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/acesso/login";
+            });
+            
             // Adicionar o serviço do banco de dados
             services.AddDbContext<Database>();
             
@@ -102,6 +108,16 @@ namespace PWABlog
                 endpoints.MapControllerRoute(
                     name: "adm.postagem",
                     pattern: "{controller=AdmPostagemController}/{action=Index}/{id?}"
+                );
+                
+                endpoints.MapControllerRoute(
+                    name: "adm",
+                    pattern: "{controller=AdmController}/{action=Painel}/{id?}"
+                );
+                
+                endpoints.MapControllerRoute(
+                    name: "controleDeAcesso",
+                    pattern: "{controller=ControleDeAcessoController}/{action=Login}/{id?}"
                 );
             });
         }
