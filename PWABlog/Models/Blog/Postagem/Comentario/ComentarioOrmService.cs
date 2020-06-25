@@ -19,7 +19,7 @@ namespace PWABlog.Models.Blog.Postagem.Comentario
             return comentario;
         }
 
-        public ComentarioEntity CriarComentario(int idPostagem, string texto, string autor, int idComentarioPai)
+        public ComentarioEntity Create(int idPostagem, string texto, string autor, int idComentarioPai)
         {
 
             var postagem = databaseContext.Postagens.Find(idPostagem);
@@ -53,7 +53,7 @@ namespace PWABlog.Models.Blog.Postagem.Comentario
             return novoComentario;
         }
 
-        public ComentarioEntity EditarComentario(int id, string texto)
+        public ComentarioEntity Edit(int id, string texto)
         {
 
             var comentario = databaseContext.Comentarios.Find(id);
@@ -67,7 +67,7 @@ namespace PWABlog.Models.Blog.Postagem.Comentario
             return comentario;
         }
 
-        public bool RemoverComentario(int id)
+        public bool Delete(int id)
         {
 
             var comentario = databaseContext.Comentarios.Find(id);

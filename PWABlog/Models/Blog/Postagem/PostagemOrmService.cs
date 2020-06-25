@@ -4,13 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using PWABlog.Models.Blog.Postagem.Revisao;
-
 namespace PWABlog.Models.Blog.Postagem
 {
     public class PostagemOrmService
@@ -81,7 +74,7 @@ namespace PWABlog.Models.Blog.Postagem
             databaseContext.Postagens.Add(novaPostagem);
             databaseContext.SaveChanges();
             
-            revisaoOrmService.CriarRevisao(novaPostagem.Id, descricao);
+            revisaoOrmService.Create(novaPostagem.Id, descricao);
             
             return novaPostagem;
         }
@@ -105,7 +98,7 @@ namespace PWABlog.Models.Blog.Postagem
             postagem.DataExibicao = dataExibicao;
             databaseContext.SaveChanges();
             
-            revisaoOrmService.CriarRevisao(postagem.Id, texto);
+            revisaoOrmService.Create(postagem.Id, texto);
 
             return postagem;
         }

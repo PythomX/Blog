@@ -13,6 +13,9 @@ using PWABlog.Models.Blog.Autor;
 using PWABlog.Models.Blog.Categoria;
 using PWABlog.Models.Blog.Etiqueta;
 using PWABlog.Models.Blog.Postagem;
+using PWABlog.Models.Blog.Postagem.Classificacao;
+using PWABlog.Models.Blog.Postagem.Comentario;
+using PWABlog.Models.Blog.Postagem.Revisao;
 
 namespace PWABlog
 {
@@ -56,10 +59,13 @@ namespace PWABlog
             services.AddDbContext<Database>();
             
             // Adicionar os serviços de ORM das entidades do domínio
-            services.AddTransient<CategoriaOrmService>();
-            services.AddTransient<PostagemOrmService>();
             services.AddTransient<AutorOrmService>();
+            services.AddTransient<CategoriaOrmService>();
             services.AddTransient<EtiquetaOrmService>();
+            services.AddTransient<PostagemOrmService>();
+            services.AddTransient<ClassificacaoOrmService>();
+            services.AddTransient<ComentarioOrmService>();
+            services.AddTransient<RevisaoOrmService>();
 
             // Adicionar os serviços que possibilitam o funcionamento dos controllers e das views
             services.AddControllersWithViews();
@@ -84,6 +90,7 @@ namespace PWABlog
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

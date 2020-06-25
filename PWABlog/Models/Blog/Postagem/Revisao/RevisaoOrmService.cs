@@ -12,14 +12,14 @@ namespace PWABlog.Models.Blog.Postagem.Revisao
             this.databaseContext = databaseContext;
         }
 
-        public RevisaoEntity ObterRevisaoPorId(int id)
+        public RevisaoEntity GetById(int id)
         {
             var revisao = databaseContext.Revisoes.Find(id);
 
             return revisao;
         }
 
-        public RevisaoEntity CriarRevisao(int idPostagem, string texto)
+        public RevisaoEntity Create(int idPostagem, string texto)
         {
 
             var postagem = databaseContext.Postagens.Find(idPostagem);
@@ -40,7 +40,7 @@ namespace PWABlog.Models.Blog.Postagem.Revisao
             return novaRevisao;
         }
 
-        public RevisaoEntity EditarRevisao(int id, string texto)
+        public RevisaoEntity Edit(int id, string texto)
         {
 
             var revisao = databaseContext.Revisoes.Find(id);
@@ -54,7 +54,7 @@ namespace PWABlog.Models.Blog.Postagem.Revisao
             return revisao;
         }
 
-        public bool RemoverRevisao(int id)
+        public bool Delete(int id)
         {
 
             var revisao = databaseContext.Revisoes.Find(id);

@@ -12,14 +12,14 @@ namespace PWABlog.Models.Blog.Postagem.Classificacao
             this.databaseContext = databaseContext;
         }
 
-        public ClassificacaoEntity ObterClassificacaoPorId(int id)
+        public ClassificacaoEntity GetById(int id)
         {
             var classificacao = databaseContext.Classificacoes.Find(id);
 
             return classificacao;
         }
 
-        public ClassificacaoEntity CriarClassificacao(int idPostagem, bool classificacaoDada)
+        public ClassificacaoEntity Create(int idPostagem, bool classificacaoDada)
         {
 
             var postagem = databaseContext.Postagens.Find(idPostagem);
@@ -38,7 +38,7 @@ namespace PWABlog.Models.Blog.Postagem.Classificacao
             return novaClassificacao;
         }
 
-        public ClassificacaoEntity EditarEtiqueta(int id, bool classificacaoDada)
+        public ClassificacaoEntity Edit(int id, bool classificacaoDada)
         {
 
             var classificacao = databaseContext.Classificacoes.Find(id);
@@ -52,7 +52,7 @@ namespace PWABlog.Models.Blog.Postagem.Classificacao
             return classificacao;
         }
 
-        public bool RemoverClassificacao(int id)
+        public bool Delete(int id)
         {
 
             var classificacao = databaseContext.Classificacoes.Find(id);
