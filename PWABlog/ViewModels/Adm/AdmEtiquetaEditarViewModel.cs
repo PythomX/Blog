@@ -3,7 +3,7 @@
 
  namespace PWABlog.ViewModels.Adm
 {
-    public class AdmEtiquetasEditarViewModel : ViewModelAreaAdministrativa
+    public class AdmEtiquetaEditarViewModel : ViewModelAreaAdministrativa
     {
         public int IdEtiqueta { get; set; }
         
@@ -16,9 +16,9 @@
         public ICollection<CategoriaAdminEtiquetas> Categorias { get; set; }
         
         
-        public AdmEtiquetasEditarViewModel()
+        public AdmEtiquetaEditarViewModel()
         {
-            Titulo = "Editar Etiqueta: ";
+            Titulo = "Edit Etiqueta: ";
             Categorias = new List<CategoriaAdminEtiquetas>();
         }
     }

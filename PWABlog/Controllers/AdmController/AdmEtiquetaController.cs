@@ -1,40 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using Blog.Models.Blog.Etiqueta;
-using PWABlog;
-using Blog.RequestModels.AdmEtiqueta;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PWABlog.Models.Blog.Categoria;
+using PWABlog.Models.Blog.Etiqueta;
+using PWABlog.RequestModels.AdmEtiqueta;
+using PWABlog.ViewModels.Adm;
 
-namespace Blog.ViewMoldels
+namespace PWABlog.Controllers.AdmController
 {
+    [Authorize]
     public class AdmEtiquetaController : Controller
     {
         private readonly CategoriaOrmService categoriaOrmService;
         private readonly EtiquetaOrmService etiquetaOrmService;
 
-        public AdmEtiquetaController(Database context, EtiquetaOrmService EtiquetaOrmService)
+        public AdmEtiquetaController(CategoriaOrmService categoriaOrmService, EtiquetaOrmService etiquetaOrmService)
         {
             this.categoriaOrmService = categoriaOrmService;
-            this.etiquetaOrmService = EtiquetaOrmService;
+            this.etiquetaOrmService = etiquetaOrmService;
         }
 
-        // GET: AdminEtiqueta
-        public IActionResult Index()
-        {
-            return View();
-        }
-        
         [HttpGet]
         public IActionResult Listar()
         {
-            AdmEtiquetasListarViewModel model = new AdmEtiquetasListarViewModel();
+            AdmEtiquetaListarViewModel model = new AdmEtiquetaListarViewModel();
             
-            // Obter as Etiquetas
             var listaEtiquetas = etiquetaOrmService.GetAll();
             
-            // Alimentar o model com as etiquetas que serão listadas
             foreach (var etiquetaEntity in listaEtiquetas) {
-                var etiquetaAdminEtiquetas = new EtiquetaAdmEtiquetas();
+                var etiquetaAdminEtiquetas = new EtiquetaAdminEtiquetas();
                 etiquetaAdminEtiquetas.Id = etiquetaEntity.Id;
                 etiquetaAdminEtiquetas.Nome = etiquetaEntity.Nome;
                 etiquetaAdminEtiquetas.NomeCategoria = etiquetaEntity.Categoria.Nome;
@@ -45,19 +39,21 @@ namespace Blog.ViewMoldels
             return View(model);
         }
 
-        // GET: AdminEtiqueta/Create
+        [HttpGet]
+        public IActionResult Detalhar(int id)
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Create()
         {
-            AdmEtiquetasCriarViewModel model = new AdmEtiquetasCriarViewModel();
+            AdmEtiquetaCriarViewModel model = new AdmEtiquetaCriarViewModel();
             
-            // Definir possível erro de processamento (vindo do post do criar)
             model.Erro = (string) TempData["erro-msg"];
             
-            // Obter as Categorias
             var listaCategorias = categoriaOrmService.ObterCategorias();
             
-            // Alimentar o model com as categorias que serão colocadas no <select> do formulário
             foreach (var categoriaEntity in listaCategorias) {
                 var categoriaAdminEtiquetas = new CategoriaAdminEtiquetas();
                 categoriaAdminEtiquetas.IdCategoria = categoriaEntity.Id;
@@ -69,19 +65,36 @@ namespace Blog.ViewMoldels
             return View(model);
         }
 
-        // POST: AdminEtiqueta/Create
         [HttpPost]
-        public IActionResult Create(AdmEtiquetaCreate request)
+        public RedirectToActionResult Create(AdmEtiquetaCreateRequestModel request)
         {
-            AdmEtiquetasCriarViewModel model = new AdmEtiquetasCriarViewModel();
+            var nome = request.Nome;
+            var idCategoria = request.IdCategoria;
+
+            try {
+                etiquetaOrmService.Create(nome, idCategoria);
+            } catch (Exception exception) {
+                TempData["erro-msg"] = exception.Message;
+                return RedirectToAction("Create");
+            }
+
+            return RedirectToAction("Listar");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            AdmEtiquetaEditarViewModel model = new AdmEtiquetaEditarViewModel();
             
-            // Definir possível erro de processamento (vindo do post do criar)
+            var etiquetaAEditar = etiquetaOrmService.GetById(id);
+            if (etiquetaAEditar == null) {
+                return RedirectToAction("Listar");
+            }
+            
             model.Erro = (string) TempData["erro-msg"];
             
-            // Obter as Categorias
-            var listaCategorias = _categoriaOrmService.ObterCategorias();
+            var listaCategorias = categoriaOrmService.ObterCategorias();
             
-            // Alimentar o model com as categorias que serão colocadas no <select> do formulário
             foreach (var categoriaEntity in listaCategorias) {
                 var categoriaAdminEtiquetas = new CategoriaAdminEtiquetas();
                 categoriaAdminEtiquetas.IdCategoria = categoriaEntity.Id;
@@ -89,60 +102,64 @@ namespace Blog.ViewMoldels
                 
                 model.Categorias.Add(categoriaAdminEtiquetas);
             }
+            
+            model.IdEtiqueta = etiquetaAEditar.Id;
+            model.NomeEtiqueta = etiquetaAEditar.Nome;
+            model.IdCategoriaEtiqueta = etiquetaAEditar.Categoria.Id;
+            model.Titulo += model.NomeEtiqueta;
 
             return View(model);
-            
         }
 
-        // GET: AdminEtiqueta/Edit/5
-        public IActionResult Edit(int? id)
-        {
-            return View();
-        }
-
-        // POST: AdminEtiqueta/Edit/5
         [HttpPost]
-        public IActionResult Edit(AdmEtiquetaEdit request)
+        public RedirectToActionResult Edit(AdmEtiquetaEditRequestModel request)
         {
             var id = request.Id;
             var nome = request.Nome;
+            var idCategoria = request.IdCategoria;
 
-            try
-            {
-                etiquetaOrmService.Edit(id, nome);
-            }
-            catch (Exception exception)
-            {
+            try {
+                etiquetaOrmService.Edit(id, nome, idCategoria);
+            } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Edit), new { id = id });
+                return RedirectToAction("Edit", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
 
-        // GET: AdminEtiqueta/Delete/5
-        public IActionResult Delete(int? id)
+        [HttpGet]
+        public IActionResult Delete(int id)
         {
-            return View();
+            AdmEtiquetaRemoverViewModel model = new AdmEtiquetaRemoverViewModel();
+            
+            var etiquetaADeletar = etiquetaOrmService.GetById(id);
+            if (etiquetaADeletar == null) {
+                return RedirectToAction("Listar");
+            }
+            
+            model.Erro = (string) TempData["erro-msg"];
+            
+            model.IdEtiqueta = etiquetaADeletar.Id;
+            model.NomeEtiqueta = etiquetaADeletar.Nome;
+            model.Titulo += model.NomeEtiqueta;
+
+            return View(model);
         }
 
-        // POST: AdminEtiqueta/Delete/5
         [HttpPost]
-        public IActionResult Delete(AdmEtiquetaDelete request)
+        public RedirectToActionResult Delete(AdmEtiquetaDeleteRequestModel request)
         {
             var id = request.Id;
 
-            try
-            {
+            try {
                 etiquetaOrmService.Delete(id);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Delete), new { id = id });
+                return RedirectToAction("Delete", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
     }
 }

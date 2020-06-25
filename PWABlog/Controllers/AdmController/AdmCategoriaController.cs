@@ -1,37 +1,44 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Blog.RequestModels.AdminCategoria;
-using System;
-using PWABlog;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using PWABlog.Models.Blog.Categoria;
+using PWABlog.RequestModels.AdmCategoria;
+using PWABlog.ViewModels.Adm;
 
-namespace Blog.ViewMoldels
+namespace PWABlog.Controllers.AdmController
 {
     public class AdmCategoriaController : Controller
     {
-        private readonly Database context;
         private readonly CategoriaOrmService categoriaOrmService;
 
-        public AdmCategoriaController(Database context, CategoriaOrmService categoriaOrmService)
+        public AdmCategoriaController(CategoriaOrmService categoriaOrmService)
         {
-            this.context = context;
             this.categoriaOrmService = categoriaOrmService;
         }
 
-        // GET: AdminCategoria
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Listar()
+        {
+            AdmCategoriListarViewModel model = new AdmCategoriListarViewModel();
+            
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Detalhar(int id)
         {
             return View();
         }
 
-        // GET: AdminCategoria/Create
+        [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.erro = TempData["erro-msg"];
+            
             return View();
         }
 
-        // POST: AdminCategoria/Create
         [HttpPost]
-        public IActionResult Create(AdmCategoriaCreate request)
+        public RedirectToActionResult Create(AdmCategoriaCreateRequestModel request)
         {
             var nome = request.Nome;
 
@@ -39,21 +46,23 @@ namespace Blog.ViewMoldels
                 categoriaOrmService.Create(nome);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction("Create");
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
 
-        // GET: AdminCategoria/Edit/5
-        public IActionResult Edit(int? id)
+        [HttpGet]
+        public IActionResult Edit(int id)
         {
+            ViewBag.id = id;
+            ViewBag.erro = TempData["erro-msg"];
+
             return View();
         }
 
-        // POST: AdminCategoria/Edit/5
         [HttpPost]
-        public IActionResult Edit(AdmCategoriaEdit request)
+        public RedirectToActionResult Edit(AdmCategoriaEditRequestModel request)
         {
             var id = request.Id;
             var nome = request.Nome;
@@ -62,21 +71,23 @@ namespace Blog.ViewMoldels
                 categoriaOrmService.Edit(id, nome);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Edit), new { id = id });
+                return RedirectToAction("Edit", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
 
-        // GET: AdminCategoria/Delete/5
-        public IActionResult Delete(int? id)
+        [HttpGet]
+        public IActionResult Delete(int id)
         {
+            ViewBag.id = id;
+            ViewBag.erro = TempData["erro-msg"];
+
             return View();
         }
 
-        // POST: AdminCategoria/Delete/5
         [HttpPost]
-        public IActionResult Delete(AdmCategoriaDelete request)
+        public RedirectToActionResult Delete(AdmCategoriaDeleteRequestModel request)
         {
             var id = request.Id;
 
@@ -84,10 +95,10 @@ namespace Blog.ViewMoldels
                 categoriaOrmService.Delete(id);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Delete), new { id = id });
+                return RedirectToAction("Delete", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
     }
 }

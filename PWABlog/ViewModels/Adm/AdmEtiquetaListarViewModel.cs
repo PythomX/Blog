@@ -2,12 +2,12 @@
 
 namespace PWABlog.ViewModels.Adm
 {
-    public class AdmEtiquetasListarViewModel : ViewModelAreaAdministrativa
+    public class AdmEtiquetaListarViewModel : ViewModelAreaAdministrativa
     {
         public ICollection<EtiquetaAdminEtiquetas> Etiquetas { get; set; }
 
 
-        public AdmEtiquetasListarViewModel()
+        public AdmEtiquetaListarViewModel()
         {
             Titulo = "Etiquetas - Administrador";
             Etiquetas = new List<EtiquetaAdminEtiquetas>();

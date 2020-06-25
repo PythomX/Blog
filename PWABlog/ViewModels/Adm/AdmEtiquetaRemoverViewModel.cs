@@ -2,7 +2,7 @@
 
 namespace PWABlog.ViewModels.Adm
 {
-    public class AdmEtiquetasRemoverViewModel : ViewModelAreaAdministrativa
+    public class AdmEtiquetaRemoverViewModel : ViewModelAreaAdministrativa
     {
         public int IdEtiqueta { get; set; }
         
@@ -10,9 +10,9 @@ namespace PWABlog.ViewModels.Adm
         
         public string Erro { get; set; }
         
-        public AdmEtiquetasRemoverViewModel()
+        public AdmEtiquetaRemoverViewModel()
         {
-            Titulo = "Remover Etiqueta: ";
+            Titulo = "Delete Etiqueta: ";
         }
     }
 }

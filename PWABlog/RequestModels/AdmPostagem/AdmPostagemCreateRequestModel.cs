@@ -1,6 +1,6 @@
-﻿namespace Blog.RequestModels.AdmPostagem
+﻿namespace PWABlog.RequestModels.AdmPostagem
 {
-    public class AdmPostagemCreate
+    public class AdmPostagemCreateRequestModel
     {
         public string Titulo { get; set; }
         public string Descricao { get; set; }

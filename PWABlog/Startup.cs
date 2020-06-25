@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Models.Blog.Autor;
-using Blog.Models.Blog.Etiqueta;
 using Blog.Models.ControleAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PWABlog.Models.Blog.Autor;
 using PWABlog.Models.Blog.Categoria;
+using PWABlog.Models.Blog.Etiqueta;
 using PWABlog.Models.Blog.Postagem;
 
 namespace PWABlog

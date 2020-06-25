@@ -1,10 +1,8 @@
-﻿using PWABlog;
-using PWABlog.Models.Blog.Autor;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Blog.Models.Blog.Autor
+namespace PWABlog.Models.Blog.Autor
 {
     public class AutorOrmService
     {

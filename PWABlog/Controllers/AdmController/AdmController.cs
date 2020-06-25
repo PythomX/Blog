@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PWABlog.ViewModels.Adm;
 
-namespace Blog.ViewMoldels
+namespace PWABlog.Controllers.AdmController
 {
     [Authorize]
     public class AdmController : Controller

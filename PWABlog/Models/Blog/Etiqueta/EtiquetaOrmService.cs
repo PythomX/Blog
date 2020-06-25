@@ -1,12 +1,9 @@
-﻿using PWABlog;
-using PWABlog.Models.Blog.Etiqueta;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Blog.Models.Blog.Etiqueta
+namespace PWABlog.Models.Blog.Etiqueta
 {
     public class EtiquetaOrmService
     {

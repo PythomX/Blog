@@ -1,12 +1,11 @@
-﻿using Blog.RequestModels.AdmPostagem;
-using Microsoft.AspNetCore.Mvc;
-using PWABlog;
-using PWABlog.Models.Blog.Postagem;
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Authorization;
-using PWABlog.ViewModels.Admin;
+using Microsoft.AspNetCore.Mvc;
+using PWABlog.Models.Blog.Postagem;
+using PWABlog.RequestModels.AdmPostagem;
+using PWABlog.ViewModels.Adm;
 
-namespace Blog.ViewMoldels
+namespace PWABlog.Controllers.AdmController
 {
     [Authorize]
     public class AdmPostagemController : Controller
@@ -21,7 +20,7 @@ namespace Blog.ViewMoldels
         [HttpGet]
         public IActionResult Listar()
         {
-            AdmPostagensListarViewModel model = new AdmPostagensListarViewModel();
+            AdmPostagemListarViewModel model = new AdmPostagemListarViewModel();
             
             return View(model);
         }
@@ -33,7 +32,7 @@ namespace Blog.ViewMoldels
         }
 
         [HttpGet]
-        public IActionResult Criar()
+        public IActionResult Create()
         {
             ViewBag.erro = TempData["erro-msg"];
 
@@ -41,7 +40,7 @@ namespace Blog.ViewMoldels
         }
 
         [HttpPost]
-        public RedirectToActionResult Criar(AdmPostagemCreate request)
+        public RedirectToActionResult Create(AdmPostagemCreateRequestModel request)
         {
             var titulo = request.Texto;
             var descricao = request.Descricao;
@@ -54,14 +53,14 @@ namespace Blog.ViewMoldels
                 postagemOrmService.Create(titulo, idCategoria, idAutor, descricao,  dataExibicao);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction("Criar");
+                return RedirectToAction("Create");
             }
 
             return RedirectToAction("Listar");
         }
 
         [HttpGet]
-        public IActionResult Editar(int id)
+        public IActionResult Edit(int id)
         {
             ViewBag.id = id;
             ViewBag.erro = TempData["erro-msg"];
@@ -70,7 +69,7 @@ namespace Blog.ViewMoldels
         }
 
         [HttpPost]
-        public RedirectToActionResult Editar(AdmPostagemEdit request)
+        public RedirectToActionResult Edit(AdmPostagemEditRequestModel request)
         {
             var id = request.Id;
             var titulo = request.Texto;
@@ -83,7 +82,7 @@ namespace Blog.ViewMoldels
                 postagemOrmService.Edit(id, titulo, descricao, idCategoria, texto, dataExibicao);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction("Editar", new {id = id});
+                return RedirectToAction("Edit", new {id = id});
             }
 
             return RedirectToAction("Listar");
@@ -99,7 +98,7 @@ namespace Blog.ViewMoldels
         }
 
         [HttpPost]
-        public RedirectToActionResult Remover(AdmPostagemDelete request)
+        public RedirectToActionResult Delete(AdmPostagemDeleteRequestModel request)
         {
             var id = request.Id;
 
@@ -107,7 +106,7 @@ namespace Blog.ViewMoldels
                 postagemOrmService.Delete(id);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction("Remover", new {id = id});
+                return RedirectToAction("Delete", new {id = id});
             }
 
             return RedirectToAction("Listar");

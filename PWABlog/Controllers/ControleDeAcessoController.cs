@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using PWABlog.RequestModels.ControleDeAcesso;
 using PWABlog.ViewModels.ControleDeAcesso;
 
-namespace Blog.ViewMoldels
+namespace PWABlog.Controllers
 {
     public class ControleDeAcessoController : Controller
     {

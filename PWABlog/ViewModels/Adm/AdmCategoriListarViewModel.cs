@@ -1,8 +1,8 @@
 ﻿﻿namespace PWABlog.ViewModels.Adm
 {
-    public class AdmCategoriasListarViewModel : ViewModelAreaAdministrativa
+    public class AdmCategoriListarViewModel : ViewModelAreaAdministrativa
     {
-        public AdmCategoriasListarViewModel()
+        public AdmCategoriListarViewModel()
         {
             Titulo = "Categorias - Administrador";
         }

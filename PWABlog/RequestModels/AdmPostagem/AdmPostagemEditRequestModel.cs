@@ -1,6 +1,6 @@
-﻿namespace Blog.RequestModels.AdmPostagem
+﻿namespace PWABlog.RequestModels.AdmPostagem
 {
-    public class AdmPostagemEdit
+    public class AdmPostagemEditRequestModel
     {
         public int Id { get; set; }
         

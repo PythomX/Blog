@@ -2,16 +2,16 @@
 
 namespace PWABlog.ViewModels.Adm
 {
-    public class AdminEtiquetasCriarViewModel : ViewModelAreaAdministrativa
+    public class AdmEtiquetaCriarViewModel : ViewModelAreaAdministrativa
     {
         public string Erro { get; set; }
 
         public ICollection<CategoriaAdminEtiquetas> Categorias { get; set; }
         
         
-        public AdminEtiquetasCriarViewModel()
+        public AdmEtiquetaCriarViewModel()
         {
-            Titulo = "Criar nova Etiqueta";
+            Titulo = "Create nova Etiqueta";
             Categorias = new List<CategoriaAdminEtiquetas>();
         }
     }
