@@ -5,7 +5,7 @@ using static PWABlog.ViewModels.Home.PostagemHomeIndex;
 
 namespace PWABlog.ViewModels.Home
 {
-    public class HomeIndexViewModel
+    public class HomeIndexViewModel : ViewModelAreaComum
     {
         public string TituloPagina { get; set; }
 

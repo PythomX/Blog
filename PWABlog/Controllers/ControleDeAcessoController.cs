@@ -11,13 +11,13 @@ namespace Blog.ViewMoldels
     public class ControleDeAcessoController : Controller
     {
         
-        private readonly ControleDeAcessoService _controleDeAcessoService;
+        private readonly ControleDeAcessoService controleDeAcessoService;
 
         public ControleDeAcessoController(
             ControleDeAcessoService controleDeAcessoService
         )
         {
-            _controleDeAcessoService = controleDeAcessoService;
+            this.controleDeAcessoService = controleDeAcessoService;
         }
 
 
@@ -42,18 +42,18 @@ namespace Blog.ViewMoldels
 
             var loginUrl = "acesso/login?ReturnUrl=" + request.Destino;
 
-            if (usuario == null) {
-                TempData["login-msg"] = "Por favor informe o nome de usuário";
+            if (usuario.Equals("")) {
+                TempData["login-msg"] = "Por favor informe um nome de usuário";
                 return Redirect(loginUrl);
             }
 
-            if (senha == null) {
-                TempData["login-msg"] = "Por favor informe a senha";
+            if (senha.Equals("")) {
+                TempData["login-msg"] = "Por favor informe uma senha";
                 return Redirect(loginUrl);
             }
 
             try {
-                await _controleDeAcessoService.AutenticarUsuario(usuario, senha);
+                await controleDeAcessoService.AutenticarUsuario(usuario, senha);
                 return Redirect(destinoAposSucessoNoLogin);
             } catch (Exception exception) {
                 TempData["login-msg"] = exception.Message;
@@ -64,7 +64,7 @@ namespace Blog.ViewMoldels
         [HttpGet]
         public RedirectToActionResult Logout()
         {
-            _controleDeAcessoService.DeslogarUsuario();
+            controleDeAcessoService.DeslogarUsuario();
 
             return RedirectToAction("Login");
         }
@@ -88,17 +88,17 @@ namespace Blog.ViewMoldels
             var senha = request.Senha;
             var token = request.Token ?? "";
 
-            if (apelido == null) {
+            if (apelido.Equals("")) {
                 TempData["erro-msg"] = "Por favor informe um apelido";
                 return RedirectToAction("Registrar");
             }
 
-            if (email == null) {
+            if (email.Equals("")) {
                 TempData["erro-msg"] = "Por favor informe um email";
                 return RedirectToAction("Registrar");
             }
 
-            if (senha == null) {
+            if (senha.Equals("")) {
                 TempData["erro-msg"] = "Por favor informe uma senha";
                 return RedirectToAction("Registrar");
             }
@@ -109,7 +109,7 @@ namespace Blog.ViewMoldels
             }
 
             try {
-                await _controleDeAcessoService.RegistrarUsuario(email, apelido, senha);
+                await controleDeAcessoService.RegistrarUsuario(email, apelido, senha);
 
                 TempData["registrar-msg"] = "Usuário Registrado!";
                 return RedirectToAction("Login");

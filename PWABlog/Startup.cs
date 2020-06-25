@@ -37,17 +37,20 @@ namespace PWABlog
                 database.Database.EnsureCreated();
             }
 
-            //Email único, e a senha é necessária ter 8 digitos!
+            //Email único, e a senha é necessária ter 6 digitos!
             services.AddIdentity<Usuario, Papel>(options => {
                 options.User.RequireUniqueEmail = true;
-                options.Password.RequiredLength = 8;
-            }).AddEntityFrameworkStores<Database>();
+                options.Password.RequiredLength = 6;
+            }).AddEntityFrameworkStores<Database>().AddErrorDescriber<DescritorDeErros>();
 
             //Configurar o mecanismo de controle de acesso
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/acesso/login";
             });
+            
+            // Adicionar o serviço do controle de acesso
+            services.AddTransient<ControleDeAcessoService>();
             
             // Adicionar o serviço do banco de dados
             services.AddDbContext<Database>();
@@ -85,39 +88,40 @@ namespace PWABlog
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
-                    );
-
-                endpoints.MapControllerRoute(
-                    name: "adm.categorias",
-                    pattern: "{controller=AdmCategorias}/{action=Index}/{id?}"
-                );
-
-                endpoints.MapControllerRoute(
-                    name: "adm.etiquetas",
-                    pattern: "{controller=AdmEtiqueta}/{action=Index}/{id?}"
-                );
-
-                endpoints.MapControllerRoute(
-                    name: "adm.autor",
-                    pattern: "{controller=AdmAutorController}/{action=Index}/{id?}"
-                );
-
-                endpoints.MapControllerRoute(
-                    name: "adm.postagem",
-                    pattern: "{controller=AdmPostagemController}/{action=Index}/{id?}"
-                );
-                
-                endpoints.MapControllerRoute(
-                    name: "adm",
-                    pattern: "{controller=AdmController}/{action=Painel}/{id?}"
-                );
-                
+                // Rotas do Controle de Acesso
                 endpoints.MapControllerRoute(
                     name: "controleDeAcesso",
-                    pattern: "{controller=ControleDeAcessoController}/{action=Login}/{id?}"
+                    pattern: "acesso/{action}",
+                    defaults: new {controller = "ControleDeAcesso", action = "Login"}
+                );
+
+                // Rotas da Área Administrativa
+                endpoints.MapControllerRoute(
+                    name: "adm",
+                    pattern: "adm",
+                    defaults: new {controller = "AdmController", action = "Painel"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adm.categorias",
+                    pattern: "adm/categorias/{action}/{id?}",
+                    defaults: new {controller = "AdmCategorias", action = "Listar"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adm.etiquetas",
+                    pattern: "adm/etiquetas/{action}/{id?}",
+                    defaults: new {controller = "AdmEtiquetas", action = "Listar"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adm.postagens",
+                    pattern: "adm/postagens/{action}/{id?}",
+                    defaults: new {controller = "AdmPostagens", action = "Listar"}
+                );
+                
+                // Rotas da Área Comum
+                endpoints.MapControllerRoute(
+                    name: "comum",
+                    pattern: "/",
+                    defaults: new {controller = "Home", action = "Index"}
                 );
             });
         }

@@ -3,112 +3,114 @@ using Microsoft.AspNetCore.Mvc;
 using PWABlog;
 using PWABlog.Models.Blog.Postagem;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using PWABlog.ViewModels.Admin;
 
 namespace Blog.ViewMoldels
 {
+    [Authorize]
     public class AdmPostagemController : Controller
     {
-        private readonly Database context;
         private readonly PostagemOrmService postagemOrmService;
 
-        public AdmPostagemController(Database context, PostagemOrmService PostagemOrmService)
+        public AdmPostagemController(PostagemOrmService PostagemOrmService)
         {
-            this.context = context;
             postagemOrmService = PostagemOrmService;
         }
 
-        // GET: AdminPostagem
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Listar()
+        {
+            AdmPostagensListarViewModel model = new AdmPostagensListarViewModel();
+            
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Detalhar(int id)
         {
             return View();
         }
 
-        // GET: AdminPostagem/Create
-        public IActionResult Create()
+        [HttpGet]
+        public IActionResult Criar()
         {
+            ViewBag.erro = TempData["erro-msg"];
+
             return View();
         }
 
-        // POST: AdminPostagem/Create
         [HttpPost]
-        public IActionResult Create(AdmPostagemCreate request)
+        public RedirectToActionResult Criar(AdmPostagemCreate request)
         {
-            var titulo = request.Titulo;
-            var categoria = request.CategoriaId;
-            var autor = request.AutorId;
+            var titulo = request.Texto;
+            var descricao = request.Descricao;
+            var idAutor = request.IdAutor;
+            var idCategoria = request.IdCategoria;
             var texto = request.Texto;
-
-            try
-            {
-                postagemOrmService.Create(titulo, categoria, autor, texto);
-            }
-            catch (Exception exception)
-            {
+            var dataExibicao = DateTime.Parse(request.DataExibicao);
+            
+            try {                        
+                postagemOrmService.Create(titulo, idCategoria, idAutor, descricao,  dataExibicao);
+            } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction("Criar");
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
 
-        // GET: AdminPostagem/Details/5
-        public IActionResult Details(int? id)
+        [HttpGet]
+        public IActionResult Editar(int id)
         {
+            ViewBag.id = id;
+            ViewBag.erro = TempData["erro-msg"];
+
             return View();
         }
 
-        // GET: AdminPostagem/Edit/5
-        public IActionResult Edit(int? id)
-        {
-            return View();
-        }
-
-        // POST: AdminPostagem/Edit/5
         [HttpPost]
-        public IActionResult Edit(AdmPostagemEdit request)
+        public RedirectToActionResult Editar(AdmPostagemEdit request)
         {
             var id = request.Id;
-            var titulo = request.Titulo;
-            var categoria = request.CategoriaId;
-            var autor = request.AutorId;
+            var titulo = request.Texto;
+            var descricao = request.Descricao;
+            var idCategoria = Convert.ToInt32(request.IdCategoria);
             var texto = request.Texto;
+            var dataExibicao = DateTime.Parse(request.DataExibicao);
 
-            try
-            {
-                postagemOrmService.Edit(id, titulo, categoria, autor, texto);
-            }
-            catch (Exception exception)
-            {
+            try {
+                postagemOrmService.Edit(id, titulo, descricao, idCategoria, texto, dataExibicao);
+            } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Edit), new { id = id });
+                return RedirectToAction("Editar", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
 
-        // GET: AdminPostagem/Delete/5
-        public IActionResult Delete(int? id)
+        [HttpGet]
+        public IActionResult Delete(int id)
         {
+            ViewBag.id = id;
+            ViewBag.erro = TempData["erro-msg"];
+
             return View();
         }
 
-        // POST: AdminPostagem/Delete/5
         [HttpPost]
-        public IActionResult Delete(AdmPostagemDelete request)
+        public RedirectToActionResult Remover(AdmPostagemDelete request)
         {
             var id = request.Id;
 
-            try
-            {
+            try {
                 postagemOrmService.Delete(id);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
-                return RedirectToAction(nameof(Delete), new { id = id });
+                return RedirectToAction("Remover", new {id = id});
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Listar");
         }
     }
 }

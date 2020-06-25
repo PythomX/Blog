@@ -36,7 +36,9 @@ namespace PWABlog.Controllers
         public IActionResult Index()
         {
             HomeIndexViewModel model = new HomeIndexViewModel();
+            
             List<PostagemEntity> listaPostagens = postagemOrmService.GetAll();
+            
             foreach (PostagemEntity postagem in listaPostagens) {
                 PostagemHomeIndex postagemHomeIndex = new PostagemHomeIndex();
                 postagemHomeIndex.Titulo = postagem.Titulo;
@@ -47,6 +49,7 @@ namespace PWABlog.Controllers
 
                 // Obter última revisão
                 RevisaoEntity ultimaRevisao = postagem.Revisoes.OrderByDescending(o => o.DataCriacao).FirstOrDefault();
+                
                 if (ultimaRevisao != null) {
                     postagemHomeIndex.DataCriacao = ultimaRevisao.DataCriacao.ToLongDateString();
                 }
@@ -56,6 +59,7 @@ namespace PWABlog.Controllers
 
             // Alimentar a lista de postagens populares que serão exibidas na view
             List<PostagemEntity> postagensPopulares = postagemOrmService.GetPostsPopular();
+            
             foreach (PostagemEntity postagemPopular in postagensPopulares) {
                 model.PostagensPopulares.Add(new PostagemHomeIndex.PostagemPopularHomeIndex()
                 {

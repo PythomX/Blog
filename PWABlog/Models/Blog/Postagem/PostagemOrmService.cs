@@ -17,9 +17,12 @@ namespace PWABlog.Models.Blog.Postagem
     {
         private readonly Database databaseContext;
 
-        public PostagemOrmService(Database databaseContext)
+        private readonly RevisaoOrmService revisaoOrmService;
+        
+        public PostagemOrmService(Database databaseContext, RevisaoOrmService revisaoOrmService)
         {
             this.databaseContext = databaseContext;
+            this.revisaoOrmService = revisaoOrmService;
         }
 
         public List<PostagemEntity> GetAll()
@@ -54,77 +57,69 @@ namespace PWABlog.Models.Blog.Postagem
             return revisao.Versao;
         }
 
-        internal PostagemEntity Create(string titulo, int categoriaId, int autorId, string texto)
+        internal PostagemEntity Create(string titulo, int idCategoria, int idAutor, string descricao, DateTime dataExibicao)
         {
-            var categoria = this.databaseContext.Categorias.Find(categoriaId);
-            if (categoria == null)
-                throw new Exception("Categoria não encontrada.");
+            
+            var autor = databaseContext.Autores.Find(idAutor);
+            if (autor == null) {
+                throw new Exception("O Autor informado para a Postagem não foi encontrado!");
+            }
 
-            var autor = this.databaseContext.Autores.Find(autorId);
-            if (autor == null)
-                throw new Exception("Autor não encontrado.");
+            var categoria = databaseContext.Categorias.Find(idCategoria);
+            if (categoria == null) {
+                throw new Exception("A Categoria informada para a Postagem não foi encontrada!");
+            }
 
-
-            var postagem = new PostagemEntity
+            var novaPostagem = new PostagemEntity
             {
+                Titulo = titulo,
+                Descricao = descricao,
                 Autor = autor,
-                Categoria = categoria
+                Categoria = categoria,
+                DataExibicao = dataExibicao
             };
-
-            this.databaseContext.Postagens.Add(postagem);
-            this.databaseContext.SaveChanges();
-
-            var revisao = new RevisaoEntity
-            {
-                Texto = texto,
-                DataCriacao = DateTime.Now,
-                Versao = 1,
-            };
-
-            postagem.Revisoes.Add(revisao);
-            this.databaseContext.SaveChanges();
-
-            return postagem;
+            databaseContext.Postagens.Add(novaPostagem);
+            databaseContext.SaveChanges();
+            
+            revisaoOrmService.CriarRevisao(novaPostagem.Id, descricao);
+            
+            return novaPostagem;
         }
 
-        internal PostagemEntity Edit(int id, string titulo, int categoriaId, int autorId, string texto)
+        public PostagemEntity Edit(int id, string titulo, string descricao, int idCategoria, string texto, DateTime dataExibicao)
         {
-            var postagem = this.databaseContext.Postagens.Find(id);
-            if (postagem == null)
-                throw new Exception("Postagem não encontrada.");
 
-            var categoria = this.databaseContext.Categorias.Find(categoriaId);
-            if (categoria == null)
-                throw new Exception("Categoria não encontrada.");
+            var postagem = databaseContext.Postagens.Find(id);
+            if (postagem == null) {
+                throw new Exception("Postagem não encontrada!");
+            }
 
-            var autor = this.databaseContext.Autores.Find(autorId);
-            if (autor == null)
-                throw new Exception("Autor não encontrado.");
+            var categoria = databaseContext.Categorias.Find(idCategoria);
+            if (categoria == null) {
+                throw new Exception("A Categoria informada para a Postagem não foi encontrada!");
+            }
 
             postagem.Titulo = titulo;
+            postagem.Descricao = descricao;
             postagem.Categoria = categoria;
-            postagem.Autor = autor;
-
-            var revisao = new RevisaoEntity
-            {
-                Texto = texto,
-                DataCriacao = DateTime.Now,
-                Versao = this.GetLastVersion(id) + 1,
-            };
-
-            postagem.Revisoes.Add(revisao);
-            this.databaseContext.SaveChanges();
+            postagem.DataExibicao = dataExibicao;
+            databaseContext.SaveChanges();
+            
+            revisaoOrmService.CriarRevisao(postagem.Id, texto);
 
             return postagem;
         }
 
         internal void Delete(int id)
         {
-            var postagem = this.databaseContext.Postagens.Find(id);
-            if (postagem == null)
-                throw new Exception("Postagem não encontrada.");
 
-            this.databaseContext.Postagens.Remove(postagem);
+            var postagem = databaseContext.Postagens.Find(id);
+            if (postagem == null) {
+                throw new Exception("Postagem não encontrada!");
+            }
+
+            databaseContext.Postagens.Remove(postagem);
+            databaseContext.SaveChanges();
         }
 
 

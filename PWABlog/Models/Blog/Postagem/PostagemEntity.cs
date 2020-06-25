@@ -1,8 +1,10 @@
-﻿using PWABlog.Models.Blog.Autor;
+﻿using System;
+using PWABlog.Models.Blog.Autor;
 using PWABlog.Models.Blog.Categoria;
 using System.Collections.Generic;
 using PWABlog.Models.Blog.Postagem.Revisao;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using PWABlog.Models.Blog.Postagem.Classificacao;
 using PWABlog.Models.Blog.Postagem.Comentario;
 
@@ -33,7 +35,8 @@ namespace PWABlog.Models.Blog.Postagem
 
         public ICollection<ClassificacaoEntity> Classificacoes { get; set; }
 
-
+        public DateTime DataExibicao { get; set; }
+        
         public PostagemEntity()
         {
             PostagensEtiquetas = new List<PostagemEtiquetaEntity>();
@@ -41,5 +44,11 @@ namespace PWABlog.Models.Blog.Postagem
             Comentarios = new List<ComentarioEntity>();
             Classificacoes = new List<ClassificacaoEntity>();
         }
+        
+        public RevisaoEntity ObterUltimaRevisao()
+        {
+            return Revisoes.OrderByDescending(r => r.Versao).FirstOrDefault();
+        }
+        
     }
 }

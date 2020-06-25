@@ -15,19 +15,19 @@ namespace Blog.Models.Blog.Autor
             this.databaseContext = databaseContext;
         }
 
-        public List<AutorEntity> getAll()
+        public List<AutorEntity> GetAll()
         {
             return databaseContext.Autores.ToList();
         }
 
-        public AutorEntity getById(int idCategoria)
+        public AutorEntity GetById(int idCategoria)
         {
             var autor = databaseContext.Autores.Find(idCategoria);
 
             return autor;
         }
 
-        public List<AutorEntity> getByName(string nomeAutor)
+        public List<AutorEntity> GetByName(string nomeAutor)
         {
             return databaseContext.Autores.Where(c => c.Nome.Contains(nomeAutor)).ToList();
         }

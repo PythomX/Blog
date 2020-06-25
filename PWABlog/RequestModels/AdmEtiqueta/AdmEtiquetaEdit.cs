@@ -1,4 +1,4 @@
-﻿namespace Blog.RequestModels.AdminEtiqueta
+﻿namespace Blog.RequestModels.AdmEtiqueta
 {
     public class AdmEtiquetaEdit
     {

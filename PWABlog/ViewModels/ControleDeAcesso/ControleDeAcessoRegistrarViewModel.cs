@@ -11,7 +11,7 @@ namespace PWABlog.ViewModels.ControleDeAcesso
 
         public ControleDeAcessoRegistrarViewModel()
         {
-            TituloPagina = "Registrar - Administrador";
+            Titulo = "Registrar - Administrador";
 
             ErrosRegistro = new List<string>();
         }

@@ -20,7 +20,7 @@
             </div>
         }
         
-        <form action="@Url.RouteUrl("controleDeAcesso", new {Action = "Login", RedirectUrl = @Model.Destino})" method="post">
+        <form action="@Url.RouteUrl("controleDeAcesso", new {action = "Login", RedirectUrl = @Model.Destino})" method="post">
             <div class="input-group mb-3">
                 <input id="usuario" name="usuario" type="email" class="form-control" placeholder="seunome@mail.com.br">
                 <div class="input-group-append">

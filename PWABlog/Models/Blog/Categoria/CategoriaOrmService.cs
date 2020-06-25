@@ -24,19 +24,19 @@ namespace PWABlog.Models.Blog.Categoria
             /**********************************************************************************************************/
             
             // First = Obter a primeira categoria retornada pela consulta
-            var primeiraCategoria = databaseContext.Categorias.First();
+            //var primeiraCategoria = databaseContext.Categorias.First();
             
             // FirstOrDefault = Mesmo do First, porém retorna nulo caso não encontre nenhuma
-            var primeiraCategoriaOuNulo = databaseContext.Categorias.FirstOrDefault();
+            //var primeiraCategoriaOuNulo = databaseContext.Categorias.FirstOrDefault();
             
             // Single = Obter um único registro do banco de dados
-            var algumaCategoriaEspecifica = databaseContext.Categorias.Single(c => c.Id == 3);
+            //var algumaCategoriaEspecifica = databaseContext.Categorias.Single(c => c.Id == 3);
             
             // SingleOrDefault = Mesmo do Sigle, porém retorna nulo caso não encontre nenhuma
-            var algumaCategoriaOuNulo = databaseContext.Categorias.SingleOrDefault(c => c.Id == 3);
+            //var algumaCategoriaOuNulo = databaseContext.Categorias.SingleOrDefault(c => c.Id == 3);
             
             // Find = Equivalente ao SingleOrDefault, porém fazendo uma busca por uma propriedade chave
-            var encontrarCategoria = databaseContext.Categorias.Find(3);
+            //var encontrarCategoria = databaseContext.Categorias.Find(3);
             
             
             /**********************************************************************************************************/
@@ -44,17 +44,17 @@ namespace PWABlog.Models.Blog.Categoria
             /**********************************************************************************************************/
      
             // ToList
-            var todasCategorias = databaseContext.Categorias.ToList();
+            //var todasCategorias = databaseContext.Categorias.ToList();
             
             
             /***********/
             /* FILTROS */
             /***********/
 
-            var categoriasComALetraG = databaseContext.Categorias.Where(c => c.Nome.StartsWith("G")).ToList();
-            var categoriasComALetraMouL = databaseContext.Categorias
-                .Where(c => c.Nome.StartsWith("M") || c.Nome.StartsWith("L"))
-                .ToList();
+            //var categoriasComALetraG = databaseContext.Categorias.Where(c => c.Nome.StartsWith("G")).ToList();
+            //var categoriasComALetraMouL = databaseContext.Categorias
+            //    .Where(c => c.Nome.StartsWith("M") || c.Nome.StartsWith("L"))
+             //   .ToList();
             
             
          
@@ -62,25 +62,25 @@ namespace PWABlog.Models.Blog.Categoria
             /* ORDENAÇÃO */
             /*************/
 
-            var categoriasEmOrdemAlfabetica = databaseContext.Categorias.OrderBy(c => c.Nome).ToList();
-            var categoriasEmOrdemAlfabeticaInversa = databaseContext.Categorias.OrderByDescending(c => c.Nome).ToList();
+            //var categoriasEmOrdemAlfabetica = databaseContext.Categorias.OrderBy(c => c.Nome).ToList();
+            //var categoriasEmOrdemAlfabeticaInversa = databaseContext.Categorias.OrderByDescending(c => c.Nome).ToList();
             
             
             /**************************/
             /* ENTIDADES RELACIONADAS */
             /**************************/
 
-            var categoriasESuasEtiquetas = databaseContext.Categorias
-                .Include(c => c.Etiquetas)
-                .ToList();
+            //var categoriasESuasEtiquetas = databaseContext.Categorias
+            //    .Include(c => c.Etiquetas)
+             //   .ToList();
                 
-            var categoriasSemEtiquetas = databaseContext.Categorias
-                .Where(c=> c.Etiquetas.Count == 0)
-                .ToList();
+            //var categoriasSemEtiquetas = databaseContext.Categorias
+            //    .Where(c=> c.Etiquetas.Count == 0)
+            //    .ToList();
             
-            var categoriasComEtiquetas = databaseContext.Categorias
-                .Where(c=> c.Etiquetas.Count > 0)
-                .ToList();
+            //var categoriasComEtiquetas = databaseContext.Categorias
+            //    .Where(c=> c.Etiquetas.Count > 0)
+             //   .ToList();
             
             // FIM DOS EXEMPLOS
             
@@ -92,14 +92,14 @@ namespace PWABlog.Models.Blog.Categoria
                 .ToList();
         }
 
-        public CategoriaEntity getById(int idCategoria)
+        public CategoriaEntity GetById(int idCategoria)
         {
             var categoria = databaseContext.Categorias.Find(idCategoria);
 
             return categoria;
         }
 
-        public List<CategoriaEntity> getByName(string nomeCategoria)
+        public List<CategoriaEntity> GetByName(string nomeCategoria)
         {
             return databaseContext.Categorias.Where(c => c.Nome.Contains(nomeCategoria)).ToList();
             
