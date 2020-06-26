@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="card-body">
-        <a class="btn btn-primary mb-3" href="/adm/etiquetas/create">Criar nova Etiqueta</a>
+        <a class="btn btn-primary mb-3" href="/adm/etiqueta/create">Criar nova Etiqueta</a>
         
         <table class="table table-bordered">
             <thead>
@@ -29,8 +29,8 @@
                         <td>@etiqueta.Nome</td>
                         <td>@etiqueta.NomeCategoria</td>
                         <td>
-                            <a class="btn btn-default btn-xs" href="/adm/etiquetas/edit/@etiqueta.Id">Editar</a>
-                            <a class="btn btn-danger btn-xs" href="/adm/etiquetas/delete/@etiqueta.Id">Remover</a>
+                            <a class="btn btn-success btn-xs" href="/adm/etiqueta/edit/@etiqueta.Id">Editar</a>
+                            <a class="btn btn-danger btn-xs" href="/adm/etiqueta/delete/@etiqueta.Id">Remover</a>
                         </td>
                     </tr>
                 }

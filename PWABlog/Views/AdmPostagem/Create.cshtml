@@ -1,1 +1,95 @@
-﻿AdminPostagem create
+﻿@using PWABlog.ViewModels.Adm
+@model PWABlog.ViewModels.Adm.AdmPostagemCriarViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Criar Postagem</h3>
+    </div>
+    <div class="card-body">
+        @if (@Model.Erro != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> Erro!</h5>
+                @Model.Erro
+            </div>
+        }
+
+    <form action="/adm/postagem/create" method="post">
+        <div class="form-group mb-3">
+            <label for="Titulo">Titulo</label>
+            <input id="Titulo" name="Titulo" type="text" class="form-control">
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="Descricao">Descricao</label>
+                    <input id="Descricao" name="Descricao" type="text" class="form-control">
+                </div> 
+            </div>
+            
+            <div class="col">
+                <div class="form-group">
+                    <label for="DataExibicao">Date de Exibição</label>
+                    <input id="DataExibicao" name="DataExibicao" type="date" class="form-control">
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="Categoria">Categoria</label>
+                    <select class="form-control" id="Categoria" name="Categoria">
+                        @foreach (CategoriaAdmPostagens categoria in Model.Categorias)
+                        {
+                            <option value="@categoria.Id">@categoria.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="form-group">
+                    <label for="Autor">Autor</label>
+                    <select class="form-control" id="Autor" name="Autor" >
+                        @foreach (AutorAdmPostagens autor in Model.Autores)
+                        {
+                            <option value="@autor.Id">@autor.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="Etiquetas">Etiquetas</label>
+                    <select multiple class="form-control" id="Etiquetas" name="Etiquetas">
+                        @foreach (EtiquetaAdmPostagens etiqueta in Model.Etiquetas)
+                        {
+                            <option value="@etiqueta.Id">@etiqueta.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="Texto">Texto</label>
+            <textarea class="form-control" id="Texto" rows="10" name="Texto"></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary btn-block">Criar</button>
+            <p class="text-center mt-3">
+                <a href="/adm/postagem">Cancelar</a>
+            </p>
+        </div>
+    </form>
+    </div>
+</div>

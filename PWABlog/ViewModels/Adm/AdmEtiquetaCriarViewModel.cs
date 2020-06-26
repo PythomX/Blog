@@ -11,7 +11,7 @@ namespace PWABlog.ViewModels.Adm
         
         public AdmEtiquetaCriarViewModel()
         {
-            Titulo = "Create nova Etiqueta";
+            Titulo = "Criar nova Etiqueta";
             Categorias = new List<CategoriaAdminEtiquetas>();
         }
     }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Blog.Models.ControleAcesso
+namespace PWABlog.Models.ControleAcesso
 {
     public class ControleDeAcessoService
     {

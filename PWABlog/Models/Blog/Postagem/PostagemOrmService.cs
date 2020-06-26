@@ -3,6 +3,7 @@ using PWABlog.Models.Blog.Postagem.Revisao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PWABlog.Models.Blog.Etiqueta;
 
 namespace PWABlog.Models.Blog.Postagem
 {
@@ -11,19 +12,40 @@ namespace PWABlog.Models.Blog.Postagem
         private readonly Database databaseContext;
 
         private readonly RevisaoOrmService revisaoOrmService;
+        private readonly EtiquetaOrmService etiquetaOrmService;
         
-        public PostagemOrmService(Database databaseContext, RevisaoOrmService revisaoOrmService)
+        public PostagemOrmService(Database databaseContext, EtiquetaOrmService etiquetaOrmService, RevisaoOrmService revisaoOrmService)
         {
             this.databaseContext = databaseContext;
             this.revisaoOrmService = revisaoOrmService;
+            this.etiquetaOrmService = etiquetaOrmService;
         }
 
+        public PostagemEntity GetById(int id)
+        {
+            return this.databaseContext.Postagens
+                .Include(c => c.Categoria)
+                .Include(r => r.Revisoes)
+                .Include(a => a.Autor)
+                .Include(e => e.PostagensEtiquetas)
+                .ThenInclude(post => post.Etiqueta)
+                .Where(p => p.Id == id)
+                .First();
+        }
+        
         public List<PostagemEntity> GetAll()
         {
             return databaseContext.Postagens
-                .Include(p => p.Categoria)
-                .Include(p => p.Revisoes)
-                .Include(p => p.Comentarios)
+                .Include(c => c.Categoria)
+                .Include(r => r.Revisoes)
+                .Include(a => a.Autor)
+                .Select(p => new
+                {
+                    p,
+                    Revisoes = p.Revisoes.OrderByDescending(r => r.Versao).Last()
+                })
+                .AsEnumerable()
+                .Select(e => e.p)
                 .ToList();
         }
 
@@ -50,36 +72,47 @@ namespace PWABlog.Models.Blog.Postagem
             return revisao.Versao;
         }
 
-        internal PostagemEntity Create(string titulo, int idCategoria, int idAutor, string descricao, DateTime dataExibicao)
+        internal PostagemEntity Create(string titulo, int categoriaId, int autorId, string descricao, string texto, List<int> etiquetas, DateTime dataExibicao)
         {
             
-            var autor = databaseContext.Autores.Find(idAutor);
+            var autor = databaseContext.Autores.Find(autorId);
             if (autor == null) {
                 throw new Exception("O Autor informado para a Postagem não foi encontrado!");
             }
 
-            var categoria = databaseContext.Categorias.Find(idCategoria);
+            var categoria = databaseContext.Categorias.Find(categoriaId);
             if (categoria == null) {
                 throw new Exception("A Categoria informada para a Postagem não foi encontrada!");
             }
 
             var novaPostagem = new PostagemEntity
             {
-                Titulo = titulo,
-                Descricao = descricao,
                 Autor = autor,
                 Categoria = categoria,
+                Titulo = titulo,
+                Descricao = descricao,
                 DataExibicao = dataExibicao
             };
+            
+            /*
+            foreach (int idEtiqueta in etiquetas)
+            {
+                var etiqueta = etiquetaOrmService.GetById(idEtiqueta);
+
+                novaPostagem.PostagensEtiquetas.Add();
+            }*/
+            
             databaseContext.Postagens.Add(novaPostagem);
             databaseContext.SaveChanges();
             
-            revisaoOrmService.Create(novaPostagem.Id, descricao);
+            revisaoOrmService.Create(novaPostagem.Id, texto);
+            
+            
             
             return novaPostagem;
         }
 
-        public PostagemEntity Edit(int id, string titulo, string descricao, int idCategoria, string texto, DateTime dataExibicao)
+        public PostagemEntity Edit(int id, string titulo, string descricao, int idCategoria, int idAutor, string texto, DateTime dataExibicao)
         {
 
             var postagem = databaseContext.Postagens.Find(id);
@@ -91,14 +124,22 @@ namespace PWABlog.Models.Blog.Postagem
             if (categoria == null) {
                 throw new Exception("A Categoria informada para a Postagem não foi encontrada!");
             }
+            
+            var autor = databaseContext.Autores.Find(idAutor);
+            if (autor == null) {
+                throw new Exception("O Autor informado para a Postagem não foi encontrado!");
+            }
 
             postagem.Titulo = titulo;
             postagem.Descricao = descricao;
+            postagem.Autor = autor;
             postagem.Categoria = categoria;
             postagem.DataExibicao = dataExibicao;
             databaseContext.SaveChanges();
             
-            revisaoOrmService.Create(postagem.Id, texto);
+            revisaoOrmService.Create(postagem.Id, descricao);
+            
+            revisaoOrmService.AddRevision(postagem.Id, texto, 1);
 
             return postagem;
         }

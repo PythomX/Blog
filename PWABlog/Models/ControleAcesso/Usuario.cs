@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Blog.Models.ControleAcesso
+namespace PWABlog.Models.ControleAcesso
 {
-    public class Usuario : IdentityUser
+    public class Usuario : IdentityUser<int>
     {
         
         public string Apelido { get; set; }

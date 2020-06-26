@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Blog.Models.ControleAcesso
+namespace PWABlog.Models.ControleAcesso
 {
     public class DescritorDeErros : IdentityErrorDescriber
     {

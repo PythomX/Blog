@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Models.ControleAcesso;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +15,7 @@ using PWABlog.Models.Blog.Postagem;
 using PWABlog.Models.Blog.Postagem.Classificacao;
 using PWABlog.Models.Blog.Postagem.Comentario;
 using PWABlog.Models.Blog.Postagem.Revisao;
+using PWABlog.Models.ControleAcesso;
 
 namespace PWABlog
 {
@@ -35,8 +35,6 @@ namespace PWABlog
 
             using (var database = new Database())
             {
-                database.Database.EnsureDeleted();
-
                 database.Database.EnsureCreated();
             }
 
@@ -106,22 +104,27 @@ namespace PWABlog
                 endpoints.MapControllerRoute(
                     name: "adm",
                     pattern: "adm",
-                    defaults: new {controller = "AdmController", action = "Painel"}
+                    defaults: new {controller = "Adm", action = "Painel"}
                 );
                 endpoints.MapControllerRoute(
-                    name: "adm.categorias",
-                    pattern: "adm/categorias/{action}/{id?}",
-                    defaults: new {controller = "AdmCategorias", action = "Listar"}
+                    name: "adm.autor",
+                    pattern: "adm/autor/{action}/{id?}",
+                    defaults: new {controller = "AdmAutor", action = "Listar"}
                 );
                 endpoints.MapControllerRoute(
-                    name: "adm.etiquetas",
-                    pattern: "adm/etiquetas/{action}/{id?}",
-                    defaults: new {controller = "AdmEtiquetas", action = "Listar"}
+                    name: "adm.categoria",
+                    pattern: "adm/categoria/{action}/{id?}",
+                    defaults: new {controller = "AdmCategoria", action = "Listar"}
                 );
                 endpoints.MapControllerRoute(
-                    name: "adm.postagens",
-                    pattern: "adm/postagens/{action}/{id?}",
-                    defaults: new {controller = "AdmPostagens", action = "Listar"}
+                    name: "adm.etiqueta",
+                    pattern: "adm/etiqueta/{action}/{id?}",
+                    defaults: new {controller = "AdmEtiqueta", action = "Listar"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adm.postagem",
+                    pattern: "adm/postagem/{action}/{id?}",
+                    defaults: new {controller = "AdmPostagem", action = "Listar"}
                 );
                 
                 // Rotas da Área Comum

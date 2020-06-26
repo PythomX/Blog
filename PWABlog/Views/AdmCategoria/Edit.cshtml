@@ -1,5 +1,35 @@
-﻿Edit @ViewBag.id
-@if (@ViewBag.erro != null)
-{
-    @:ERRO: @ViewBag.erro
-}
+﻿@using PWABlog.ViewModels.Adm
+@model PWABlog.ViewModels.Adm.AdmCategoriaEditViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Editar Categoria</h3>
+    </div>
+    <div class="card-body">
+        @if (@Model.Erro != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> Erro!</h5>
+                @Model.Erro
+            </div>
+        }
+
+        <form action="/adm/categoria/edit" method="post">
+            <div class="col">
+                <div class="form-group mb-3">
+                    <label for="Nome">Nome</label>
+                    <input id="Nome" name="Nome" type="text" class="form-control" value="@Model.Nome">
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="hidden" id="Id" name="Id" value="@Model.Id">
+                <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
+                <p class="text-center mt-3">
+                    <a href="/adm/categoria">Cancelar</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>

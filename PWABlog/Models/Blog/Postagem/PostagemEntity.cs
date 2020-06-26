@@ -23,6 +23,8 @@ namespace PWABlog.Models.Blog.Postagem
         [Required]
         public string Descricao { get; set; }
 
+        public DateTime DataExibicao { get; set; }
+        
         public AutorEntity Autor { get; set; }
 
         public CategoriaEntity Categoria { get; set; }
@@ -35,7 +37,7 @@ namespace PWABlog.Models.Blog.Postagem
 
         public ICollection<ClassificacaoEntity> Classificacoes { get; set; }
 
-        public DateTime DataExibicao { get; set; }
+        
         
         public PostagemEntity()
         {

@@ -1,15 +1,43 @@
-﻿@model PWABlog.ViewModels.Adm.AdmPostagemListarViewModel
+﻿@using PWABlog.ViewModels.Adm
+@model PWABlog.ViewModels.Adm.AdmPostagemListarViewModel
 
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Listagem de Postagens</h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i></button>
-        </div>
     </div>
     <div class="card-body">
-        Conteúdo qualquer do painel
+        <a class="btn btn-primary mb-3" href="/adm/postagem/create">Criar Postagem</a>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Titulo</th>
+                    <th>Categoria</th>
+                    <th>Autor</th>
+                    <th>Data de Exibição</th>
+                    <th>Versao</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (PostagemAdmPostagens postagem in @Model.Postagens)
+                {
+                <tr>
+                    <td>@postagem.Id</td>
+                    <td>@postagem.Titulo</td>
+                    <td>@postagem.Categoria</td>
+                    <td>@postagem.Autor</td>
+                    <td >@postagem.DataDeExibicao</td>
+                    <td >@postagem.Versao</td>
+                    <td>
+                        <a class="btn btn-success btn-xs" href="/adm/postagem/edit/@postagem.Id">Editar</a>
+                        <a class="btn btn-danger btn-xs" href="/adm/postagem/delete/@postagem.Id">Remover</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>

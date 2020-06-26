@@ -1,1 +1,52 @@
-﻿AdminEtiqueta Edit
+﻿@using PWABlog.ViewModels.Adm
+@model PWABlog.ViewModels.Adm.AdmEtiquetaEditViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Editar Etiqueta</h3>
+    </div>
+    <div class="card-body">
+        @if (@Model.Erro != null)
+        {
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> Erro!</h5>
+                @Model.Erro
+            </div>
+        }
+
+    <form action="/adm/etiqueta/edit" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="Nome">Nome</label>
+                    <input id="Nome" name="Nome" type="text" class="form-control" value="@Model.NomeEtiqueta">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="idCategoria">Categoria</label>
+                <div class="form-group mb-3">
+        
+                    <select class="col-md-12 p-2" name="idCategoria" required>
+                        @foreach (CategoriaAdminEtiquetas categoria in Model.Categorias) {
+                            @if (@Model.IdCategoriaEtiqueta == categoria.IdCategoria) {
+                                <option selected value="@categoria.IdCategoria">@categoria.NomeCategoria</option>
+                            } else {
+                                <option value="@categoria.IdCategoria">@categoria.NomeCategoria</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <input type="hidden" name="Id" value="@Model.IdEtiqueta">
+            <button type="submit" class="btn btn-primary btn-block">Criar</button>
+            <p class="text-center mt-3">
+                <a href="/adm/etiqueta">Cancelar</a>
+            </p>
+        </div>
+    </form>
+    </div>
+</div>

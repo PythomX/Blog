@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blog.Models.ControleAcesso;
 using Microsoft.AspNetCore.Mvc;
+using PWABlog.Models.ControleAcesso;
 using PWABlog.RequestModels.ControleDeAcesso;
 using PWABlog.ViewModels.ControleDeAcesso;
 
@@ -38,16 +38,16 @@ namespace PWABlog.Controllers
         {
             var usuario = request.Usuario;
             var senha = request.Senha;
-            var destinoAposSucessoNoLogin = request.Destino ?? "admin";
+            var destinoAposSucessoNoLogin = request.Destino ?? "adm";
 
             var loginUrl = "acesso/login?ReturnUrl=" + request.Destino;
 
-            if (usuario.Equals("")) {
+            if (usuario == null) {
                 TempData["login-msg"] = "Por favor informe um nome de usuário";
                 return Redirect(loginUrl);
             }
 
-            if (senha.Equals("")) {
+            if (senha == null) {
                 TempData["login-msg"] = "Por favor informe uma senha";
                 return Redirect(loginUrl);
             }
@@ -88,17 +88,17 @@ namespace PWABlog.Controllers
             var senha = request.Senha;
             var token = request.Token ?? "";
 
-            if (apelido.Equals("")) {
+            if (apelido == null) {
                 TempData["erro-msg"] = "Por favor informe um apelido";
                 return RedirectToAction("Registrar");
             }
 
-            if (email.Equals("")) {
+            if (email == null) {
                 TempData["erro-msg"] = "Por favor informe um email";
                 return RedirectToAction("Registrar");
             }
 
-            if (senha.Equals("")) {
+            if (senha == null) {
                 TempData["erro-msg"] = "Por favor informe uma senha";
                 return RedirectToAction("Registrar");
             }

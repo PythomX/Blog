@@ -1,15 +1,35 @@
-﻿@model PWABlog.ViewModels.Adm.AdmAutorListarViewModel
+﻿@using PWABlog.ViewModels.Adm
+@model PWABlog.ViewModels.Adm.AdmAutorListarViewModel
 
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Listagem de Autores</h3>
-
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i></button>
-        </div>
     </div>
     <div class="card-body">
-        Conteúdo do painel
+        <a class="btn btn-primary mb-3" href="/adm/autor/create">Criar Autor</a>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (AutorAdmAutores autor in @Model.Autores)
+                {
+                    <tr>
+                        <td>@autor.Id</td>
+                        <td>@autor.Nome</td>
+                        <td>
+                            <a class="btn btn-success btn-xs" href="/adm/autor/edit/@autor.Id">Editar</a>
+                            <a class="btn btn-danger btn-xs" href="/adm/autor/delete/@autor.Id">Remover</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>

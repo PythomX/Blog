@@ -47,7 +47,6 @@ namespace PWABlog.Controllers
                 postagemHomeIndex.NumeroComentarios = postagem.Comentarios.Count.ToString();
                 postagemHomeIndex.Id = postagem.Id.ToString();
 
-                // Obter última revisão
                 RevisaoEntity ultimaRevisao = postagem.Revisoes.OrderByDescending(o => o.DataCriacao).FirstOrDefault();
                 
                 if (ultimaRevisao != null) {
