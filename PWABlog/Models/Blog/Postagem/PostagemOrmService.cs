@@ -94,25 +94,61 @@ namespace PWABlog.Models.Blog.Postagem
                 DataExibicao = dataExibicao
             };
             
-            /*
-            foreach (int idEtiqueta in etiquetas)
-            {
-                var etiqueta = etiquetaOrmService.GetById(idEtiqueta);
-
-                novaPostagem.PostagensEtiquetas.Add();
-            }*/
+            
             
             databaseContext.Postagens.Add(novaPostagem);
             databaseContext.SaveChanges();
+
+            UpdateTag(novaPostagem.Id, etiquetas);
             
-            revisaoOrmService.Create(novaPostagem.Id, texto);
-            
-            
+            revisaoOrmService.AddRevision(novaPostagem.Id, texto, 1);
             
             return novaPostagem;
         }
 
-        public PostagemEntity Edit(int id, string titulo, string descricao, int idCategoria, int idAutor, string texto, DateTime dataExibicao)
+        private void UpdateTag(in int novaPostagemId, List<int> etiquetas)
+        {
+            
+            
+            var postagem = this.GetById(novaPostagemId);
+            
+            if (postagem == null)
+                throw new Exception("Postagem não encontrada.");
+
+            Dictionary<EtiquetaEntity, PostagemEtiquetaEntity> etiquetaEntities = new Dictionary<EtiquetaEntity, PostagemEtiquetaEntity>();
+
+            if(postagem.PostagensEtiquetas != null)
+            {
+                foreach (var postagemEtiquetaEntity in postagem.PostagensEtiquetas)
+                {
+                    etiquetaEntities[postagemEtiquetaEntity.Etiqueta] = postagemEtiquetaEntity;
+                }
+            }
+            
+            
+            foreach(var etiqueta in this.databaseContext.Etiquetas)
+            {
+                if(etiquetaEntities.ContainsKey(etiqueta))
+                {
+                    if(!etiquetas.Contains(etiqueta.Id))
+                    {
+                        etiquetaOrmService.AttachTag(etiqueta.Id, postagem.Id);
+                    }
+                } 
+                else
+                {
+                    if(etiquetas.Contains(etiqueta.Id))
+                    {
+                        etiquetaOrmService.DetachTag(etiqueta.Id, postagem.Id);
+                    }
+                }
+            }
+            
+            
+            
+        }
+
+        public PostagemEntity Edit(int id, string titulo, int categoriaId, int autorId, string descricao, string texto, List<int> etiquetas, DateTime dataExibicao)
         {
 
             var postagem = databaseContext.Postagens.Find(id);
@@ -120,12 +156,12 @@ namespace PWABlog.Models.Blog.Postagem
                 throw new Exception("Postagem não encontrada!");
             }
 
-            var categoria = databaseContext.Categorias.Find(idCategoria);
+            var categoria = databaseContext.Categorias.Find(categoriaId);
             if (categoria == null) {
                 throw new Exception("A Categoria informada para a Postagem não foi encontrada!");
             }
             
-            var autor = databaseContext.Autores.Find(idAutor);
+            var autor = databaseContext.Autores.Find(autorId);
             if (autor == null) {
                 throw new Exception("O Autor informado para a Postagem não foi encontrado!");
             }
@@ -135,11 +171,13 @@ namespace PWABlog.Models.Blog.Postagem
             postagem.Autor = autor;
             postagem.Categoria = categoria;
             postagem.DataExibicao = dataExibicao;
+            
+            UpdateTag(postagem.Id, etiquetas);
+            
             databaseContext.SaveChanges();
             
-            revisaoOrmService.Create(postagem.Id, descricao);
-            
-            revisaoOrmService.AddRevision(postagem.Id, texto, 1);
+            //Pegando a ultima revisao e sempre adicionando mais 1
+            revisaoOrmService.AddRevision(postagem.Id, texto, GetLastVersion(id) + 1);
 
             return postagem;
         }

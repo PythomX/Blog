@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using PWABlog.Models.Blog.Postagem;
 
 namespace PWABlog.Models.Blog.Etiqueta
 {
@@ -84,6 +85,47 @@ namespace PWABlog.Models.Blog.Etiqueta
             this.databaseContext.SaveChanges();
 
             return etiqueta;
+        }
+
+        public void AttachTag(int etiquetaId, int postagemId)
+        {
+            
+            var etiqueta = this.databaseContext.Etiquetas.Find(etiquetaId);
+            if (etiqueta == null)
+                throw new Exception("Não foi possível encontrar a etiqueta!");
+
+            var postagem = this.databaseContext.Postagens.Find(postagemId);
+            if (postagem == null)
+                throw new Exception("Não foi possível encontrar a postagem!");
+
+            this.databaseContext.PostagensEtiquetas.Add(new PostagemEtiquetaEntity
+            {
+                Postagem = postagem,
+                Etiqueta = etiqueta
+            });
+
+            databaseContext.SaveChangesAsync();
+            
+        }
+
+        public void DetachTag(int etiquetaId, int postagemId)
+        {
+            
+            var etiqueta = this.databaseContext.Etiquetas.Find(etiquetaId);
+            if (etiqueta == null)
+                throw new Exception("Não foi possível encontrar esta etiqueta!");
+
+            var postagem = this.databaseContext.Postagens.Find(postagemId);
+            if (postagem == null)
+                throw new Exception("Não foi possível encontrar esta postagem!");
+
+            var entity = this.databaseContext.PostagensEtiquetas.Where(ep => ep.IdEtiqueta == etiquetaId && ep.IdPostagem == postagemId).First();
+            if (entity == null)
+                throw new Exception("Falha ao encontrar etiqueta anexada!");
+
+            this.databaseContext.PostagensEtiquetas.Remove(entity);
+            this.databaseContext.SaveChanges();
+            
         }
     }
 }

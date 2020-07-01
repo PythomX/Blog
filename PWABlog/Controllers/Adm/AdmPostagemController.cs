@@ -45,6 +45,7 @@ namespace PWABlog.Controllers.Adm
                 postagemAdmPostagens.Categoria = post.Categoria.Nome;
                 postagemAdmPostagens.Versao = post.Revisoes.Count;
                 postagemAdmPostagens.DataDeExibicao = post.DataExibicao.ToString("dd/MM/yyyy");
+                postagemAdmPostagens.Versao = post.Revisoes.OrderByDescending(r => r.Versao).Last().Versao;
                 
                 
                 model.Postagens.Add(postagemAdmPostagens);
@@ -121,6 +122,8 @@ namespace PWABlog.Controllers.Adm
         {
             AdmPostagemEditViewModel model = new AdmPostagemEditViewModel();
             
+            model.Erro = (string) TempData["erro-msg"];
+            
             var listaAutores = autorOrmService.GetAll();
             
             foreach (var autorEntity in listaAutores)
@@ -159,7 +162,13 @@ namespace PWABlog.Controllers.Adm
             model.Titulo = postagem.Titulo;
             model.Texto = postagem.Revisoes.OrderByDescending(r => r.Versao).Last().Texto;
             
-            model.Erro = (string) TempData["erro-msg"];
+            
+            
+            
+            foreach(var etiqueta in postagem.PostagensEtiquetas)
+            {
+                model.EtiquetasPostagem.Add(etiqueta.IdEtiqueta);
+            }
 
             return View(model);
         }
@@ -169,15 +178,17 @@ namespace PWABlog.Controllers.Adm
         {
             var id = request.Id;
             var titulo = request.Titulo;
-            var idCategoria = request.idCategoria;
-            var autor = request.idAutor;
+            var categoriaId = request.idCategoria;
+            var autorId = request.idAutor;
             var texto = request.Texto;
             var descricao = request.Descricao;
             var etiquetas = request.Etiquetas;
             var dataExibicao = DateTime.Parse(request.DataExibicao);
 
+            
+            //string titulo, int categoriaId, int autorId, string descricao, string texto, List<int> etiquetas, DateTime dataExibicao
             try {
-                postagemOrmService.Edit(id, titulo, descricao, idCategoria, autor, texto, dataExibicao);
+                postagemOrmService.Edit(id, titulo, categoriaId, autorId, descricao, texto, etiquetas, dataExibicao);
             } catch (Exception exception) {
                 TempData["erro-msg"] = exception.Message;
                 return RedirectToAction("Edit", new {id = id});

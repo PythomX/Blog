@@ -27,6 +27,8 @@ namespace PWABlog
         public DbSet<ComentarioEntity> Comentarios { get; set; }
         
         public DbSet<ClassificacaoEntity> Classificacoes { get; set; }
+        
+        public DbSet<PostagemEtiquetaEntity> PostagensEtiquetas { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,17 +42,8 @@ namespace PWABlog
         {
             base.OnModelCreating(modelBuilder);
 
-            // Mapear relacionamentos entre as entidades
-            // N:N (Postagens -> Etiquetas [PostagemEtiquetaEntity])
-            modelBuilder.Entity<PostagemEtiquetaEntity>().ToTable("PostagensEtiquetas");
+            modelBuilder.Entity<PostagemEtiquetaEntity>().HasKey(pe => new { pe.IdEtiqueta, pe.IdPostagem });
 
-            modelBuilder.Entity<PostagemEtiquetaEntity>()
-                .HasOne(pe => pe.Postagem)
-                .WithMany(p => p.PostagensEtiquetas);
-
-            modelBuilder.Entity<PostagemEtiquetaEntity>()
-                .HasOne(pe => pe.Etiqueta)
-                .WithMany(e => e.PostagensEtiquetas);
 
         }
 

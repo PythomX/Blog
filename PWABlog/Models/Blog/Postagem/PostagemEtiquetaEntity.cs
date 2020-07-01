@@ -5,8 +5,9 @@ namespace PWABlog.Models.Blog.Postagem
 {
     public class PostagemEtiquetaEntity
     {
-        [Key]
-        public int Id { get; set; }
+        public int IdPostagem { get; set; }
+        
+        public int IdEtiqueta { get; set; }
         
         public PostagemEntity Postagem { get; set; }
         
